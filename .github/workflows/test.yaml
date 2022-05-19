@@ -6,7 +6,7 @@ on:
       - 'main'
 
 jobs:
-  main:
+  parallel:
     runs-on: ubuntu-latest
     steps:
 
@@ -18,7 +18,7 @@ jobs:
           cat /proc/cpuinfo
           lscpu
 
-      - name: Run Docker containers in parallel
+      - name: Run Docker containers
         run: |
           echo "List of running containers"
           docker ps -a
@@ -45,3 +45,24 @@ jobs:
               break
             fi
           done
+
+  serial:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: CPU info
+        run: |
+          cat /proc/cpuinfo
+          lscpu
+
+      - name: Run Docker containers
+        run: |
+          echo "List of running containers"
+          docker ps -a
+          
+          echo "Starting containers"
+          docker run ubuntu:latest sh -c 'dd if=/dev/urandom of=/dev/null bs=1M count=10000'
+          docker run ubuntu:latest sh -c 'dd if=/dev/urandom of=/dev/null bs=1M count=10000'
