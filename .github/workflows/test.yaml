@@ -15,4 +15,4 @@ jobs:
 
       - name: Build docker image
         run: |
-          cpuinfo
+          cat /proc/cpuinfo
