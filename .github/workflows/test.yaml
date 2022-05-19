@@ -20,4 +20,28 @@ jobs:
 
       - name: Run Docker containers
         run: |
-          time docker run --rm ubuntu:latest sh -c 'dd if=/dev/urandom of=/dev/null bs=1M count=10000'
+          echo "List of running containers"
+          docker ps -a
+          
+          echo "Starting containers"
+          docker run -d ubuntu:latest sh -c 'dd if=/dev/urandom of=/dev/null bs=1M count=10000'
+          docker run -d ubuntu:latest sh -c 'dd if=/dev/urandom of=/dev/null bs=1M count=10000'
+                    
+          echo "Waiting for containers to finish"
+          export CONTAINERS_START_TIME=$(date +%s)
+          export CONTAINERS_TIMEOUT_SEC=120
+          let "CONTAINERS_MAX_TIME=${CONTAINERS_START_TIME}+${CONTAINERS_TIMEOUT_SEC}"
+          while true; do
+            if [[ $(date +%s) -gt CONTAINERS_MAX_TIME ]]; then
+              echo "Timeout waiting for containers. Remaining containers:"
+              docker ps -a
+              break
+            fi
+            CONTAINERS_RUNNING=$(docker ps -a | grep -v 'CONTAINER ID' | grep -v 'Exited (0)' | wc -l)
+            echo "Running containers: ${CONTAINERS_RUNNING}"
+            if [[ ${CONTAINERS_RUNNING} -gt 0 ]]; then
+              sleep 5
+            else
+              break
+            fi
+          done
