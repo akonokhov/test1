@@ -20,4 +20,4 @@ jobs:
 
       - name: Run Docker containers
         run: |
-          time docker run -it --rm ubuntu:latest sh -c 'dd if=/dev/urandom of=/dev/null bs=1M count=10000'
+          time docker run --rm ubuntu:latest sh -c 'dd if=/dev/urandom of=/dev/null bs=1M count=10000'
