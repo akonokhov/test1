@@ -18,7 +18,7 @@ jobs:
           cat /proc/cpuinfo
           lscpu
 
-      - name: Run Docker containers
+      - name: Run Docker containers in parallel
         run: |
           echo "List of running containers"
           docker ps -a
@@ -29,7 +29,7 @@ jobs:
                     
           echo "Waiting for containers to finish"
           export CONTAINERS_START_TIME=$(date +%s)
-          export CONTAINERS_TIMEOUT_SEC=120
+          export CONTAINERS_TIMEOUT_SEC=300
           let "CONTAINERS_MAX_TIME=${CONTAINERS_START_TIME}+${CONTAINERS_TIMEOUT_SEC}"
           while true; do
             if [[ $(date +%s) -gt CONTAINERS_MAX_TIME ]]; then
