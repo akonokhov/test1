@@ -13,6 +13,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Build docker image
+      - name: CPU info
         run: |
           cat /proc/cpuinfo
+          lscpu
+
+      - name: Run Docker containers
+        run: |
+          time docker run -it --rm ubuntu:latest sh -c 'dd if=/dev/urandom of=/dev/null bs=1M count=10000'
